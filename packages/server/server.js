@@ -1,20 +1,32 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const app = express();
 
+const jobs = require("./routes/api/jobs");
+
+app.use(bodyParser.json());
+
+app.set("view engine", "jade");
+
+
+
 app.get("/", function (req, res) {
-  res.send("Hello World!");
+  res.render("index");
 });
 
 
-const mongoURI = "mongodb+srv://Admin:admin@project-oab1m.mongodb.net/Admin?retryWrites=true&w=majority";
+const mongoURI = "mongodb+srv://admin:admin@project-oab1m.mongodb.net/Project?retryWrites=true&w=majority";
 
-
+//Conectar a DB Mongo
 mongoose.connect(mongoURI)
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.log(err));
 
-app.listen(8000, () => {
-  console.log("Example app listening on port 8000!");
+// Usa rutas
+app.use("/api/jobs", jobs);
+
+app.listen(5000, () => {
+  console.log("Example app listening on port 5000!");
 });
 
