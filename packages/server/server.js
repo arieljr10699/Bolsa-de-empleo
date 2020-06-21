@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const app = express();
 
 const jobs = require("./routes/api/jobs");
+const users = require("./routes/api/users");
 
 app.use(bodyParser.json());
 
@@ -25,6 +26,7 @@ mongoose.connect(mongoURI)
 
 // Usa rutas
 app.use("/api/jobs", jobs);
+app.use("/api/users", users);
 
 app.listen(5000, () => {
   console.log("Example app listening on port 5000!");
