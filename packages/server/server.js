@@ -2,11 +2,13 @@ require('dotenv').config();
 
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const app = express();
 
 const jobs = require("./routes/api/jobs");
 const users = require("./routes/api/users");
+const categories = require("./routes/api/categories");
+
+
 
 
 //Leer config stage y port
@@ -46,6 +48,7 @@ mongoose.connect(mongoURI, {
 // Usa rutas
 app.use("/api/jobs", jobs);
 app.use("/api/users", users);
+app.use("/api/categories", categories);
 
 app.listen(`${stage.port}`, () => {
   console.log(`Example app listening on port ${stage.port} !`);

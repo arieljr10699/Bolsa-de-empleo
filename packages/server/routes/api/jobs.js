@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 const job = require ("../../models/Job");
-const Job = require("../../models/Job");
 
 //Ruta GET Jobs
 router.get("/", (req, res) => {
@@ -24,7 +23,7 @@ router.post("/", (req, res) => {
 //Ruta DELETE Jobs
 router.delete("/:id", (req, res) => {
 
-    Job.findById(req.params.id)
+    job.findById(req.params.id)
         .then(job => job.remove().then(() => res.json("Job eliminado")))
         .catch(err => res.status(404).json("Job no Eliminado"))
 });
