@@ -2,14 +2,13 @@ require('dotenv').config();
 
 const express = require("express");
 const mongoose = require("mongoose");
+
 const app = express();
 
 const jobs = require("./routes/api/jobs");
 const users = require("./routes/api/users");
 const categories = require("./routes/api/categories");
-
-
-
+const configs = require("./routes/api/configs");
 
 //Leer config stage y port
 const environment = process.env.NODE_ENV; // development
@@ -22,6 +21,8 @@ app.use(express.json());
 
 //Archivos staticos para logos
 app.set(express.static("public"));
+
+
 
 //Motor de vista pero para development
 app.set("view engine", "jade");
@@ -40,7 +41,9 @@ app.get("/login", function (req, res) {
 mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useCreateIndex: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      useFindAndModify: false
+      
 })
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.log(err));
@@ -49,6 +52,7 @@ mongoose.connect(mongoURI, {
 app.use("/api/jobs", jobs);
 app.use("/api/users", users);
 app.use("/api/categories", categories);
+app.use("/api/configs", configs);
 
 app.listen(`${stage.port}`, () => {
   console.log(`Example app listening on port ${stage.port} !`);
