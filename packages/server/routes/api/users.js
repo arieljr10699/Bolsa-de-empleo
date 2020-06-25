@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const user = require ("../../models/User");
-const User = require("../../models/User");
 
 
 //Ruta GET Users
@@ -45,11 +44,12 @@ router.post("/", (req, res) => {
                 
                 jwt.sign(
                     { id: user.id },
-                    "thisisaSecret",
+                    process.env.JWT_SECRET,
                     { expiresIn: 3600},
                     (err, token) => {
                         if(err) throw err;
                         res.json({
+                            token,
                             user: {
                                 id: user.id,
                                 username: user.username,
@@ -64,50 +64,6 @@ router.post("/", (req, res) => {
     
 });
 
-
-//Ruta POST Users/auth
-//Acceso de usuarios
-router.post("/auth", (req, res) => {
-
-    const { email, password } = req.body;
-
-    //Validacion de datos disponibles
-    if( !email || !password ){
-        return res.status(400).json({ msg: "Rellene todos los valores"})
-    }
-
-    //Validacion de Email debe ser campo unico
-    User.findOne({ email })
-        .then(user => {
-            if(!user) return res.status(400).json({msg: "Usuario no existe"})
-
-            //Validar password
-    bcrypt.compare(password, user.password)
-    .then(isMatch => {
-        if(!isMatch) return res.status(400).json("Contraseña incorrecta");
-
-        jwt.sign(
-            { id: user.id },
-            "thisisaSecret",
-            { expiresIn: 3600},
-            (err, token) => {
-                if(err) throw err;
-                res.json({
-                    user: {
-                        id: user.id,
-                        token: token,
-                        username: user.username,
-                        email: user.email
-                }
-            })
-            }
-        )
-        })
-
-    
-        })
-    
-});
 
 
 module.exports = router;

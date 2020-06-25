@@ -9,6 +9,7 @@ const jobs = require("./routes/api/jobs");
 const users = require("./routes/api/users");
 const categories = require("./routes/api/categories");
 const configs = require("./routes/api/configs");
+const auth = require("./routes/api/auth");
 
 //Leer config stage y port
 const environment = process.env.NODE_ENV; // development
@@ -53,6 +54,7 @@ app.use("/api/jobs", jobs);
 app.use("/api/users", users);
 app.use("/api/categories", categories);
 app.use("/api/configs", configs);
+app.use("/api", auth);
 
 app.listen(`${stage.port}`, () => {
   console.log(`Example app listening on port ${stage.port} !`);

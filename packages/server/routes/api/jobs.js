@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const formidable = require("formidable");
 const fs = require("fs");
+const auth = require("../../middlewares/auth");
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ const category = require ("../../models/Category");
 
 //Ruta GET Jobs
 //Retorna un JSON con todos los documentos Jobs
-router.get("/", (req, res) => {
+router.get("/", auth, (req, res) => {
     job.find()
         .populate("category", "tipo")
         .sort({date: -1})
@@ -19,7 +20,7 @@ router.get("/", (req, res) => {
 });
 
 //Ruta GET Jobs
-router.get("/:category", (req, res) => {
+router.get("/:category", auth, (req, res) => {
 
     category.find({}, (err,categories) => {
 
@@ -45,7 +46,7 @@ router.get("/:category", (req, res) => {
 
 //Ruta POST Jobs
 //enctype = "multipart/form-data"
-router.post("/", (req, res) => {
+router.post("/", auth, (req, res) => {
 
 
     const form = formidable({ keepExtensions: true });
@@ -104,7 +105,7 @@ router.post("/", (req, res) => {
 
 //Ruta DELETE Jobs
 //Se envia el id del Job para buscar en BD y eliminar.
-router.delete("/:id", (req, res) => {
+router.delete("/:id", auth, (req, res) => {
 
     job.findById(req.params.id)
         .then(job => job.remove().then(() => res.json("Job eliminado")))
@@ -113,7 +114,7 @@ router.delete("/:id", (req, res) => {
 
 //Ruta PUT Jobs
 //enctype = "multipart/form-data"
-router.put('/:id', (req, res) => {
+router.put('/:id', auth, (req, res) => {
 
     const form = formidable({ keepExtensions: true });
 

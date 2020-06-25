@@ -1,17 +1,18 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../../middlewares/auth");
 
 const category = require ("../../models/Category");
 
 
 //Ruta GET Jobs
-router.get("/", (req, res) => {
+router.get("/", auth, (req, res) => {
     category.find()
         .then(categories => res.json(categories))
 });
 
 //Ruta POST Jobs
-router.post("/", (req, res) => {
+router.post("/", auth, (req, res) => {
 
     const newCategory = new Category({
         tipo: req.body.tipo
@@ -33,7 +34,7 @@ router.post("/", (req, res) => {
 
 //Ruta DELETE Categories
 //Se envia la categoria en su forma string como parametro para la eliminacion
-router.delete("/:tipo", (req, res) => {
+router.delete("/:tipo", auth, (req, res) => {
 
     category.find({tipo: req.params.tipo})
         .remove(() => res.json("Categoria eliminada"))
@@ -43,9 +44,9 @@ router.delete("/:tipo", (req, res) => {
 });
 
 
-//Ruta DELETE Categories
+//Ruta PUT Categories
 //Se envia la categoria en su forma string como parametro para la eliminacion
-router.put("/:tipo", (req, res) => {
+router.put("/:tipo", auth, (req, res) => {
 
     //Buscar al primer documento category que coincida con el campo tipo y actualizar
     category.findOneAndUpdate({"tipo": req.params.tipo }, { tipo: req.body.tipo }, (err, doc) => {
