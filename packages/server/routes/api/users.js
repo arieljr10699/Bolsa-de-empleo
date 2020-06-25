@@ -15,9 +15,9 @@ router.get("/", (req, res) => {
 
 //Ruta POST Users
 //Registro de usuarios
-router.post("/", (req, res) => {
+router.post("/", (req, res, next) => {
 
-    const { email, password, username } = req.body;
+    const { email, password, username, rol } = req.body;
 
     //Validacion de datos disponibles
     if( !email || !password || !username){
@@ -25,15 +25,16 @@ router.post("/", (req, res) => {
     }
 
     //Validacion de Email debe ser campo unico
-    User.findOne({ email })
+    user.findOne({ email })
         .then(user => {
             if(user) return res.status(400).json({msg: "Usuario ya existe"})
         })
 
     const newUser = new User({
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password
+        username,
+        email,
+        password,
+        rol
     });
 
     bcrypt.genSalt(10, (err, salt) => {
@@ -43,7 +44,7 @@ router.post("/", (req, res) => {
             newUser.save().then(user =>
                 
                 jwt.sign(
-                    { id: user.id },
+                    { id: user.id, rol: user.rol },
                     process.env.JWT_SECRET,
                     { expiresIn: 3600},
                     (err, token) => {
@@ -53,12 +54,13 @@ router.post("/", (req, res) => {
                             user: {
                                 id: user.id,
                                 username: user.username,
-                                email: user.email
+                                email: user.email,
+                                rol: user.rol
                         }
                     })
                     }
                 )
-                );
+                ).catch(next);
         })
     })
     

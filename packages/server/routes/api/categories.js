@@ -1,18 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../../middlewares/auth");
+const jwtAuth = require("../../middlewares/jwtAuth");
+const adminAuth = require("../../middlewares/adminAuth");
 
 const category = require ("../../models/Category");
 
 
-//Ruta GET Jobs
-router.get("/", auth, (req, res) => {
+//Ruta GET Categories
+router.get("/", jwtAuth, (req, res) => {
     category.find()
         .then(categories => res.json(categories))
 });
 
-//Ruta POST Jobs
-router.post("/", auth, (req, res) => {
+//Ruta POST Category
+router.post("/", [jwtAuth, adminAuth], (req, res) => {
 
     const newCategory = new Category({
         tipo: req.body.tipo
@@ -34,7 +35,7 @@ router.post("/", auth, (req, res) => {
 
 //Ruta DELETE Categories
 //Se envia la categoria en su forma string como parametro para la eliminacion
-router.delete("/:tipo", auth, (req, res) => {
+router.delete("/:tipo", [jwtAuth, adminAuth], (req, res) => {
 
     category.find({tipo: req.params.tipo})
         .remove(() => res.json("Categoria eliminada"))
@@ -46,7 +47,7 @@ router.delete("/:tipo", auth, (req, res) => {
 
 //Ruta PUT Categories
 //Se envia la categoria en su forma string como parametro para la eliminacion
-router.put("/:tipo", auth, (req, res) => {
+router.put("/:tipo", [jwtAuth, adminAuth], (req, res) => {
 
     //Buscar al primer documento category que coincida con el campo tipo y actualizar
     category.findOneAndUpdate({"tipo": req.params.tipo }, { tipo: req.body.tipo }, (err, doc) => {

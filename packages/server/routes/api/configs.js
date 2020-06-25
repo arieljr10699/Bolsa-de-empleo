@@ -1,18 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../../middlewares/auth");
+const jwtAuth = require("../../middlewares/jwtAuth");
+const adminAuth = require("../../middlewares/adminAuth");
 
 const config = require ("../../models/Config");
 
 
 //Ruta GET Config
-router.get("/", auth, (req, res) => {
+router.get("/", [jwtAuth, adminAuth], (req, res) => {
     config.find()
         .then(configs => res.json(configs))
 });
 
 //Ruta POST Config
-router.post("/", auth, (req, res) => {
+router.post("/", [jwtAuth, adminAuth], (req, res) => {
 
     const newConfig = new Config({
         amount: req.body.amount
@@ -25,7 +26,7 @@ router.post("/", auth, (req, res) => {
 
 //Ruta DELETE Configs
 //Se envia la categoria en su forma string como parametro para la eliminacion
-router.delete("/:id", auth, (req, res) => {
+router.delete("/:id", [jwtAuth, adminAuth], (req, res) => {
 
     config.findById(req.params.id)
         .then(config => config.remove().then(() => res.json("Config eliminado")))
@@ -36,7 +37,7 @@ router.delete("/:id", auth, (req, res) => {
 
 //Ruta PUT Configs
 //Se envia el id del configs para ser editado
-router.put("/:id", auth, (req, res) => {
+router.put("/:id", [jwtAuth, adminAuth], (req, res) => {
 
     //Buscar al primer documento category que coincida con el campo tipo y actualizar
     category.findOneAndUpdate({"id": req.params.id }, { amount: req.body.amount }, (err, doc) => {

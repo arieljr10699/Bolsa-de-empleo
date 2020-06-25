@@ -2,10 +2,9 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const auth = require("../../middlewares/auth");
+const jwtAuth = require("../../middlewares/jwtAuth");
 
 const user = require ("../../models/User");
-const User = require("../../models/User");
 
 
 //Ruta GET Users
@@ -20,7 +19,7 @@ router.get("/", (req, res) => {
 //Ruta POST Users/auth
 //Acceso de usuarios
 //privada
-router.post("/auth", (req, res) => {
+router.post("/auth", (req, res, next) => {
 
     const { email, password } = req.body;
 
@@ -30,7 +29,7 @@ router.post("/auth", (req, res) => {
     }
 
     //Validacion de Email debe ser campo unico
-    User.findOne({ email })
+    user.findOne({ email })
         .then(user => {
             if(!user) return res.status(400).json({msg: "Usuario no existe"})
 
@@ -40,7 +39,7 @@ router.post("/auth", (req, res) => {
         if(!isMatch) return res.status(400).json("Contraseña incorrecta");
 
         jwt.sign(
-            { id: user.id },
+            { id: user.id, rol: user.rol },
             process.env.JWT_SECRET,
             { expiresIn: 3600},
             (err, token) => {
@@ -49,14 +48,14 @@ router.post("/auth", (req, res) => {
                     token,
                     user: {
                         id: user.id,
-                        token: token,
                         username: user.username,
-                        email: user.email
+                        email: user.email,
+                        rol: user.rol
                 }
             })
             }
         )
-        })
+        }).catch(next);
 
     
         })
@@ -68,7 +67,7 @@ router.post("/auth", (req, res) => {
 // Obtener informacion del usuario.
 //Privada
 
-router.get("/user", auth, (req, res) => {
+router.get("/user", jwtAuth, (req, res) => {
     user.findById(req.user.id)
         .select("-password")
         .then(user => res.json(user));
