@@ -33,8 +33,7 @@ const JobSchema = new Schema({
     },
     email: {
         type: String,
-        match: emailMatch,
-        unique: true
+        match: emailMatch
     },
     description: {
         type: String

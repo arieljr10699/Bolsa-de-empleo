@@ -10,11 +10,37 @@ const category = require ("../../models/Category");
 
 
 //Ruta GET Jobs
+//Retorna un JSON con todos los documentos Jobs
 router.get("/", (req, res) => {
     job.find()
         .populate("category", "tipo")
         .sort({date: -1})
         .then(jobs => res.json(jobs))
+});
+
+//Ruta GET Jobs
+router.get("/:category", (req, res) => {
+
+    category.find({}, (err,categories) => {
+
+
+        const catDetails = categories.find(category => {
+            return category.tipo == req.params.category;
+
+        });
+
+        //De no encontrar la categoria enviar respuesta
+        if(typeof catDetails == "undefined") res.send("Categoria no encontrada"); 
+        else
+        {
+            job.find({category: catDetails._id})
+            .populate("category", "tipo")
+            .sort({date: -1})
+            .then(jobs => res.json(jobs));
+        }
+        
+    });
+    
 });
 
 //Ruta POST Jobs
@@ -36,11 +62,11 @@ router.post("/", (req, res) => {
         //Mover el archivo  al path public/logos
         fs.rename(file.path, "public/logos/" + file.name, function (err) {
             if (err) throw err;
-            console.log('Archivo agregadp');
+            console.log("Archivo agregado");
           });
 
           
-        const {company, type, url, position, location, description} = fields;
+        const {company, type, url, position, location, description, email} = fields;
 
         //Buscar categorias
         category.find({}, (err,categories) => {
@@ -51,19 +77,25 @@ router.post("/", (req, res) => {
 
             });
 
-            const newJob = new Job({
-                company,
-                type,
-                url,
-                position,
-                location,
-                description,
-                logo: file.name,
-                category: mongoose.Types.ObjectId(catDetails._id)
-            });
+            //De no encontrar la categoria enviar respuesta
+            if(typeof catDetails == "undefined") res.send("Categoria no encontrada"); 
+            else
+            {
 
-            newJob.save().then(job => res.json(job));
+                const newJob = new Job({
+                    company,
+                    type,
+                    url,
+                    position,
+                    location,
+                    description,
+                    logo: file.name,
+                    email,
+                    category: mongoose.Types.ObjectId(catDetails._id)
+                });
 
+                newJob.save().then(job => res.json(job));
+            }
     });
 
 });
@@ -99,7 +131,7 @@ router.put('/:id', (req, res) => {
 
             });
 
-            const {company, type, url, position, location, description, logo} = fields;
+            const {company, type, url, position, location, description, email} = fields;
 
             const file = files.logo;
         
@@ -119,6 +151,7 @@ router.put('/:id', (req, res) => {
                                     location,
                                     description,
                                     logo: file.name,
+                                    email
 
                                 },function(err, doc) {
             if (err) return res.send(500, {error: err});
