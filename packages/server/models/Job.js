@@ -31,7 +31,7 @@ const JobSchema = new Schema({
         type: String,
         required: true
     },
-    email: {
+    compemail: {
         type: String,
         match: emailMatch
     },

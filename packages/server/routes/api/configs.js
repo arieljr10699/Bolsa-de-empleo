@@ -18,7 +18,7 @@ router.post("/", [jwtAuth, adminAuth], (req, res) => {
     const newConfig = new Config({
         amount: req.body.amount
     });
-    newConfig.save().then(config => res.json(config));
+    newConfig.save().then(config => res.json(config)).catch( err => res.send(err));;
 
 
 });

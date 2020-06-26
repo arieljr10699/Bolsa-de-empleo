@@ -24,7 +24,7 @@ router.post("/", [jwtAuth, adminAuth], (req, res) => {
         if(err) throw err;
 
         //De no encontrar duplicados proceder a guardar
-        if(docs == 0) newCategory.save().then(category => res.json(category));
+        if(docs == 0) newCategory.save().then(category => res.json(category)).catch( err => res.send(err));
 
         //De encontrarlo proceder a reportarlo y no agregarlo.
         else return res.json("Categoria duplicada")

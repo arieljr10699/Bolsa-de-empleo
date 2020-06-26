@@ -20,12 +20,12 @@ router.get("/", jwtAuth, (req, res) => {
         .then(jobs => res.json(jobs))
 });
 
-//Ruta GET Jobs
-router.get("/:category", jwtAuth, (req, res) => {
+//Ruta GET /jobs/:category
+//Retorna los Jobs con la misma categoria
+router.get("/category/:category", jwtAuth, (req, res) => {
 
     //Buscar todas las categorias disponibles
     category.find({}, (err,categories) => {
-
 
         const catDetails = categories.find(category => {
             return category.tipo == req.params.category;
@@ -46,6 +46,17 @@ router.get("/:category", jwtAuth, (req, res) => {
     
 });
 
+
+//Ruta GET /jobs/:id
+//Retorna el Job que coincida con el parametro id
+router.get("/:id", jwtAuth, (req, res) => {
+
+    job.findById(req.params.id)
+        .populate("category", "tipo")
+        .then(job => res.json(job));
+    
+});
+
 //Ruta POST Jobs
 //enctype = "multipart/form-data"
 router.post("/", jwtAuth, (req, res) => {
@@ -53,28 +64,28 @@ router.post("/", jwtAuth, (req, res) => {
 
     const form = formidable({ keepExtensions: true });
 
-   // if(!req.body.category || !req.body.company) res.send("campos incompletos");
-    //else
+   
 
     //Peticiones a esta ruta deben estar encoded como multipart/form-data
     form.parse(req, (err, fields, files) => {
 
-        if (err) res.send(err);
+        if (err) return res.send(err);
 
-        
+        const {company, type, url, position, location, description, compemail} = fields;
+
+        if(!company || !type || !position || !location) return res.send("Complete los campos requeridos");
+
         const file = files.logo;
         
         if(file !== undefined){
         
             //Mover el archivo  al path public/logos
             fs.rename(file.path, "public/logos/" + file.name, function (err) {
-                if (err) res.send(err);
-                console.log('Imagen modificada con exito');
+                if (err) return res.send(err);
+                console.log('Path cambiado');
             });
             }
-
-          
-        const {company, type, url, position, location, description, email} = fields;
+        
 
         //Buscar categorias
         category.find({}, (err,categories) => {
@@ -86,24 +97,22 @@ router.post("/", jwtAuth, (req, res) => {
             });
 
             //De no encontrar la categoria enviar respuesta
-            if(typeof catDetails == "undefined") res.send("Categoria no encontrada"); 
-            else
-            {
+            if(typeof catDetails == "undefined") return res.send("Categoria no encontrada"); 
 
-                const newJob = new Job({
-                    company,
-                    type,
-                    url,
-                    position,
-                    location,
-                    description,
-                    logo: file.name,
-                    email,
-                    category: mongoose.Types.ObjectId(catDetails._id)
-                });
+            const newJob = new Job({
+                company,
+                type,
+                url,
+                position,
+                location,
+                description,
+                logo: file.name,
+                compemail,
+                category: mongoose.Types.ObjectId(catDetails._id)
+            });
 
-                newJob.save().then(job => res.json(job));
-            }
+            newJob.save().then(job => res.json(job)).catch( err => res.send(err));
+            
     });
 
 });
@@ -125,13 +134,16 @@ router.put('/:id', [jwtAuth, adminAuth],  (req, res) => {
 
     const form = formidable({ keepExtensions: true });
 
-    if(!req.body.category || !req.body.company) res.send("campos incompletos");
-    else
-
     //Peticiones a esta ruta deben estar encoded como multipart/form-data
     form.parse(req, (err, fields, files) => {
 
-        if (err)  res.send(err);
+        if (err)  return res.send(err);
+
+        const {company, type, url, position, location, description, compemail} = fields;
+
+        const file = files.logo;
+
+        if(!company || !type || !position || !location) return res.send("Complete los campos requeridos");
 
         //Buscar categorias
         category.find({}, (err,categories) => {
@@ -141,11 +153,6 @@ router.put('/:id', [jwtAuth, adminAuth],  (req, res) => {
                 return category.tipo == fields.category;
 
             });
-
-            const {company, type, url, position, location, description, email} = fields;
-
-            const file = files.logo;
-
 
             if(file !== undefined){
         
@@ -166,8 +173,8 @@ router.put('/:id', [jwtAuth, adminAuth],  (req, res) => {
                                         location,
                                         description,
                                         logo: file.name,
-                                        email
-
+                                        compemail,
+                                        category: mongoose.Types.ObjectId(catDetails._id)
                                     },function(err, doc) {
                 if (err) return res.send(500, {error: err});
 

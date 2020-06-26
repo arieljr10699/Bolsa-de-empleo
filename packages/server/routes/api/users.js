@@ -60,7 +60,7 @@ router.post("/", (req, res, next) => {
                     })
                     }
                 )
-                ).catch(next);
+                ).catch( err => res.send(err));;
         })
     })
     
