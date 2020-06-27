@@ -8,9 +8,11 @@ const users = require("./routes/api/users");
 const categories = require("./routes/api/categories");
 const configs = require("./routes/api/configs");
 const auth = require("./routes/api/auth");
+var compression = require("compression");
 
 const app = express();
 
+//Helmet Middleware
 app.use(helmet());
 
 //Leer config stage y port
@@ -25,16 +27,13 @@ app.use(express.json());
 //Archivos staticos para logos
 app.set(express.static("public"));
 
+app.use(compression());
 
-
-//Routing
+//Live sign
 app.get("/", function (req, res) {
-  res.render("index");
+  res.send("Vivo");
 });
 
-app.get("/login", function (req, res) {
-    res.render("login");
-  });
 
 //Conectar a DB Mongo
 mongoose.connect(mongoURI, {
