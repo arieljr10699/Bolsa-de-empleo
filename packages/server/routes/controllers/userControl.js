@@ -49,7 +49,7 @@ exports.register = function(req, res) {
                     })
                     }
                 )
-                ).catch( err => res.send(err));;
+                ).catch( err => res.send(err));
         })
     })
 };
@@ -90,9 +90,7 @@ exports.login = function(req, res) {
             })
             }
         )
-        }).catch(next);
-
-    
+        }).catch( err => res.send(err));
         })
 };
 

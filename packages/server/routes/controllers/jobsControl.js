@@ -42,9 +42,6 @@ exports.findIdJob = function(req, res, id) {
         .then(job => res.json(job));
 };
 
-
-
-
 exports.postJobs= function(req, res) {
 
     const form = formidable({ keepExtensions: true });
@@ -89,7 +86,7 @@ exports.postJobs= function(req, res) {
                 position,
                 location,
                 description,
-                logo: file.name,
+                logo: (file !== undefined )?file.name: null,
                 compemail,
                 category: mongoose.Types.ObjectId(catDetails._id)
             });

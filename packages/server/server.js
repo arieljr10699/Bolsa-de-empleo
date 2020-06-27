@@ -2,14 +2,16 @@ require('dotenv').config();
 
 const express = require("express");
 const mongoose = require("mongoose");
-
-const app = express();
-
+const helmet = require("helmet");
 const jobs = require("./routes/api/jobs");
 const users = require("./routes/api/users");
 const categories = require("./routes/api/categories");
 const configs = require("./routes/api/configs");
 const auth = require("./routes/api/auth");
+
+const app = express();
+
+app.use(helmet());
 
 //Leer config stage y port
 const environment = process.env.NODE_ENV; // development
@@ -23,10 +25,6 @@ app.use(express.json());
 //Archivos staticos para logos
 app.set(express.static("public"));
 
-
-
-//Motor de vista pero para development
-app.set("view engine", "jade");
 
 
 //Routing
