@@ -3,11 +3,13 @@ require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
+
 const jobs = require("./routes/api/jobs");
 const users = require("./routes/api/users");
 const categories = require("./routes/api/categories");
 const configs = require("./routes/api/configs");
 const auth = require("./routes/api/auth");
+
 var compression = require("compression");
 
 const app = express();

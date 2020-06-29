@@ -10,6 +10,10 @@ exports.findCategories = function(req, res) {
 
 exports.postCategory = function(req, res) {
 
+    const { tipo } = req.body;
+
+    if( !tipo) return res.send("Faltan datos");
+
     const newCategory = new Category({
         tipo: req.body.tipo
     });

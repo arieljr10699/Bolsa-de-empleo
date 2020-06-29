@@ -10,6 +10,10 @@ exports.findConfigs = function(req, res) {
 
 exports.postConfig = function(req, res) {
 
+    const { amount } = req.body;
+
+    if( !amount ) return res.send("Faltan datos");
+
     //Guardar nuevo documento config
     const newConfig = new Config({
         amount: req.body.amount
