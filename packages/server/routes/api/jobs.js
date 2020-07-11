@@ -5,17 +5,17 @@ const job_controller = require("../controllers/jobsControl");
 const router = express.Router();
 
 
-
+"jwtAuth,"
 
 //Ruta GET Jobs
 //Retorna un JSON con todos los documentos Jobs
-router.get("/", jwtAuth, (req, res) => {
+router.get("/",(req, res) => {
     job_controller.findJobs(req, res);
 });
 
 //Ruta GET /jobs/:category
 //Retorna los Jobs con la misma categoria
-router.get("/category/:category", jwtAuth, (req, res) => {
+router.get("/category/:category", (req, res) => {
 
     job_controller.findCategoryJobs(req, res, req.params.category);
     
@@ -24,7 +24,7 @@ router.get("/category/:category", jwtAuth, (req, res) => {
 
 //Ruta GET /jobs/:id
 //Retorna el Job que coincida con el parametro id
-router.get("/:id", jwtAuth, (req, res) => {
+router.get("/:id",  (req, res) => {
 
     job_controller.findIdJob(req, res, req.params.id);
     

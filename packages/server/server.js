@@ -4,6 +4,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 
+
 const jobs = require("./routes/api/jobs");
 const users = require("./routes/api/users");
 const categories = require("./routes/api/categories");
@@ -21,6 +22,8 @@ app.use(helmet());
 const environment = process.env.NODE_ENV; // development
 const stage = require('./config')[environment];
 
+const cors = require('cors');
+app.use(cors());
 const mongoURI = process.env.MONGO_URI;
 
 //Usar express body parser
@@ -42,9 +45,8 @@ mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useUnifiedTopology: true,
-      useFindAndModify: false
-      
-})
+      useFindAndModify: false,
+    })
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.log(err));
 
@@ -55,7 +57,10 @@ app.use("/api/categories", categories);
 app.use("/api/configs", configs);
 app.use("/api", auth);
 
-app.listen(`${stage.port}`, () => {
-  console.log(`Example app listening on port ${stage.port} !`);
+app.listen(5000, () => {
+  console.log(`Example app listening on port  !`);
 });
+
+
+
 

@@ -11,6 +11,12 @@ const router = express.Router();
 });*/
 
 //Ruta POST Users
+
+router.post("/login", (req, res) => {
+
+    user_controller.login(req,res);
+});
+
 //Registro de usuarios
 router.post("/", (req, res) => {
 
@@ -20,3 +26,5 @@ router.post("/", (req, res) => {
 
 
 module.exports = router;
+
+
