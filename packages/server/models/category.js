@@ -5,6 +5,10 @@ const CategorySchema = new Schema({
     tipo: {
         type: String,
         required: true
+    },
+    active: {
+        type: Boolean,
+        default: true
     }
 });
 

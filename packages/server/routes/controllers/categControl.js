@@ -15,7 +15,8 @@ exports.postCategory = function(req, res) {
     if( !tipo) return res.send("Faltan datos");
 
     const newCategory = new Category({
-        tipo: req.body.tipo
+        tipo,
+        active: req.body.active
     });
     
     //Revisar para duplicados
@@ -40,12 +41,14 @@ exports.deleteCategory = function(req, res, tipo) {
 
 
 exports.editCategory = function(req, res, tipo) {
+
  
     //Buscar al primer documento category que coincida con el campo tipo y actualizar
-    category.findOneAndUpdate({"tipo": tipo }, { tipo: req.body.tipo }, (err, doc) => {
+    category.findOneAndUpdate({"tipo": tipo }, { tipo: req.body.tipo, active: req.body.active }, (err, doc) => {
         if (err) return res.send(500, {error: err});
 
         doc.tipo = req.body.tipo;
+        doc.active = req.body.active;
         return res.send(doc);
         });
 };
