@@ -31,12 +31,16 @@ exports.deleteConfig = function(req, res, id) {
 
 
 exports.editConfig = function(req, res, id) {
+
+    const { amount } = req.body;
+
+    if(!amount) res.send("Falta informacion necesaria apra actualizar.");
  
     //Buscar al primer documento category que coincida con el campo tipo y actualizar
-    category.findOneAndUpdate({"id": id }, { amount: req.body.amount }, (err, doc) => {
+    config.findOneAndUpdate({"_id": id }, { amount }, (err, doc) => {
         if (err) return res.send(500, {error: err});
 
-        doc.amount = req.body.amount;
+        doc.amount = amount;
         return res.send(doc);
         });
 };
