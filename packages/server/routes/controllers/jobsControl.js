@@ -130,6 +130,9 @@ exports.editJob = function(req, res, id) {
 
             });
 
+            //De no encontrar la categoria enviar respuesta
+            if(typeof catDetails == "undefined") return res.send("Categoria no encontrada"); 
+
             if(file !== undefined){
         
                 //Mover el archivo  al path public/logos
@@ -137,6 +140,7 @@ exports.editJob = function(req, res, id) {
                     if (err) res.send(err);
                     console.log('Imagen modificada con exito');
                 });
+            }
             
         
                 //Buscar al primer documento job que coincida con el id y actualizar
@@ -148,7 +152,7 @@ exports.editJob = function(req, res, id) {
                                         position,
                                         location,
                                         description,
-                                        logo: file.name,
+                                        logo: (file !== undefined )?file.name: null,
                                         compemail,
                                         category: mongoose.Types.ObjectId(catDetails._id)
                                     },function(err, doc) {
@@ -160,12 +164,12 @@ exports.editJob = function(req, res, id) {
                 doc.position = position;
                 doc.location = location;
                 doc.description = description;
-                doc.logo = file.name;
+                doc.logo = (file !== undefined )?file.name: null,
                 doc.compemail = compemail,
                 doc.category = fields.category;
                 return res.send(doc);
                 });
-            }
+            
     });
     });
 };
