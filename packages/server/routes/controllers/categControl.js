@@ -21,8 +21,8 @@ exports.postCategory = function(req, res) {
     
     //Revisar para duplicados
     category.find({tipo: newCategory.tipo}, (err,docs) =>{
-        if(err) throw err;
-
+        if (err) return res.send(500, {error: err});
+        
         //De no encontrar duplicados proceder a guardar
         if(docs == 0) newCategory.save().then(category => res.json(category)).catch( err => res.send(err));
 

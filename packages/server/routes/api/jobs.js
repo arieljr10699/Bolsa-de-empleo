@@ -25,10 +25,17 @@ router.get("/category/:category", jwtAuth, (req, res) => {
 //Ruta GET /jobs/:id
 //Retorna el Job que coincida con el parametro id
 router.get("/:id", jwtAuth, (req, res) => {
-
     job_controller.findIdJob(req, res, req.params.id);
     
 });
+
+//Ruta GET /api/jobs/search/:param
+//Busca en diferentes campos en los difernetes documentos jobs y los retorna.
+//Los campos de busqueda son location, type y position
+router.get("/search/:key", jwtAuth, (req, res) => {
+    job_controller.searchJob(req,res,req.params.key);
+    
+})
 
 //Ruta GET jobs/logos/
 //Ruta servidora de imagenes y/o logos.
