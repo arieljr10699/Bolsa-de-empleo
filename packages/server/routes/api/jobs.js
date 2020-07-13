@@ -50,5 +50,10 @@ router.put('/:id', [jwtAuth, adminAuth],  (req, res) => {
     job_controller.editJob(req, res, req.params.id);
 });
 
+//Ruta GET jobs/logos/
+//Ruta servidora de imagenes y/o logos.
+router.get("/logos/:name", (req, res) => {
 
+    res.sendFile(req.params.name, { root: "public/logos/" });
+});
 module.exports = router;
