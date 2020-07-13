@@ -153,7 +153,16 @@ exports.editJob = function(req, res, id) {
                                         category: mongoose.Types.ObjectId(catDetails._id)
                                     },function(err, doc) {
                 if (err) return res.send(500, {error: err});
-
+                
+                doc.company = company;
+                doc.type = type;
+                doc.url = url;
+                doc.position = position;
+                doc.location = location;
+                doc.description = description;
+                doc.logo = file.name;
+                doc.compemail = compemail,
+                doc.category = fields.category;
                 return res.send(doc);
                 });
             }

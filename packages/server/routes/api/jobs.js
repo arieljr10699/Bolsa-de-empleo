@@ -30,6 +30,13 @@ router.get("/:id", jwtAuth, (req, res) => {
     
 });
 
+//Ruta GET jobs/logos/
+//Ruta servidora de imagenes y/o logos.
+router.get("/logos/:name", (req, res) => {
+
+    res.sendFile(req.params.name, { root: "public/logos/" });
+});
+
 //Ruta POST Jobs
 //enctype = "multipart/form-data"
 router.post("/", jwtAuth, (req, res) => {
@@ -50,10 +57,5 @@ router.put('/:id', [jwtAuth, adminAuth],  (req, res) => {
     job_controller.editJob(req, res, req.params.id);
 });
 
-//Ruta GET jobs/logos/
-//Ruta servidora de imagenes y/o logos.
-router.get("/logos/:name", (req, res) => {
 
-    res.sendFile(req.params.name, { root: "public/logos/" });
-});
 module.exports = router;
