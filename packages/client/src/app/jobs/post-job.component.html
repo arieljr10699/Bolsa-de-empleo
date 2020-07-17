@@ -1,0 +1,66 @@
+<div class="container">
+    <h1>New Job</h1>
+    <form action="" method="POST" [formGroup]="form">
+        <div class="form-group">
+            <label for="company" class="control-label">Company Name:</label>
+            <input type="text" id="company" name="company" formControlName="company" class="col-md-5 form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="category" class="control-label">Categories</label>
+            <select id="category" name="category" formControlName="category">
+                <option *ngFor = "let val of categories" [value]="val.tipo">{{val.tipo}}</option>
+            </select>
+        </div>
+
+
+
+        <div class="form-group">
+            <label for="tipo" class="control-label">Tipo: </label>
+            <input type="text" id="tipo" class="col-md-5 form-control" name="tipo" formControlName="type" />
+        </div>
+
+        <div class="form-group">
+            <label for="url" class="control-label">Url: </label>
+            <input type="url" id="url" class="col-md-5 form-control" name="url" formControlName="url">
+        </div>
+
+        <div class="form-group">
+            <label for="position" class="control-label">Position: </label>
+            <input type="text" id="position" class="col-md-5 form-control" name="position" formControlName="position">
+        </div>
+
+        <div class="form-group">
+            <label for="location" class="control-label">Location: </label>
+            <input type="text" id="location" class="col-md-5 form-control" name="location" formControlName="location">
+        </div>
+
+        <div class="form-group">
+            <label for="email" class="control-label">Email: </label>
+            <input type="text" id="email" class="col-md-5 form-control" name="email" formControlName="compemail">
+        </div>
+
+        <div class="form-group">
+            <label for="description" class="control-label">Descripcion: </label>
+            <input type="text" id="description" class="col-md-5 form-control" name="description" formControlName="description">
+        </div>
+
+        <div class="form-group">
+            <label for="logo" class="control-label">Logo: </label>
+            <input id="logo" name="logo" type="file" formControlName="logo" (change)="uploadFile($event)">
+        </div>
+
+        <div class="form-group">
+            <label for="date" class="control-label">Date: </label>
+            <input type="datetime-local" id="date" name="date" placeholder="yyyy-MM-ddTHH:mm:ss" min="2018-01-01T00:00:00" max="2021-12-31T00:00:00" required />
+        </div>
+
+
+        <div class="panel-footer">
+            <button class="btn btn-primary" (click)="postJob()">Post</button>
+        </div>
+
+
+
+    </form>
+</div>

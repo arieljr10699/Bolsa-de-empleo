@@ -1,0 +1,51 @@
+<div class="bg-container" style="position: relative;">
+    <!-- <h1 class="titulo">Bolsa de Empleos</h1> -->
+    <hr>
+    <div  class="mainmenu container">
+        <div class="leftmenu">
+            <input id="search" #search placeholder="Search" [(ngModel)] = "searchTerm" (keyup.enter)="filteredJob(search.value)" type="text">
+            <button id="buttonSearch"  (click) = "filteredJob(search.value)">Search</button>
+        </div>
+        <div class="rightmenu">            
+            <button id="postJobButton" *ngIf="showPost()"  class="btn btn-primary btn-md" (click)="postJob()">Post Job</button>
+            <button id="adminPanelButton"  *ngIf="showAdminPanel()" class="btn btn-primary btn-md" (click)="adminPanel()">Admin Panel</button>         
+        </div>
+      
+    </div>
+    <div class="container" style="position: relative;">
+
+
+        <div class="container mt-5" *ngFor="let cat of CATEGORIES">
+
+            <h1> <a (click) = "showJobs(cat)" >{{cat}}</a> </h1>
+            <hr>
+            <table class="table" style="background-color: white;" *ngIf="filteredJobs">
+                <thead class="thead-dark">
+                    <tr>
+
+                        <th scope="col">Company</th>
+                        <th scope="col">Position</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Detail</th>
+                        <th *ngIf="showAdminPanel()" >Admin Panel</th>
+
+                    </tr>
+                </thead>
+                <tbody *ngFor="let job of filteredJobs.slice(0, amount); ">
+                    <tr *ngIf="job.category.tipo === cat">
+
+                        <td>{{job.company}}</td>
+                        <td>{{job.position}}</td>
+                        <td>{{job.location}}</td>
+                        <td><button id="detailButton" class="btn btn-primary col-md-5" (click)="jobDetail(job._id)">Go</button></td>
+                        <td>
+                            <app-control-panel *ngIf="showAdminPanel()" [job] ="job" (afterDeleting)="refresh($event)"></app-control-panel>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <pagination-controls id="pagination1" (pageChange)="pageChanged($event)"></pagination-controls>
+        </div>
+    </div>
+</div>
